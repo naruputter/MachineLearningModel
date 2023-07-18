@@ -4,54 +4,55 @@ from sklearn.preprocessing import StandardScaler
 from sklearn.linear_model import Perceptron
 from sklearn.metrics import accuracy_score
 
-df = pd.read_csv('data/train.csv')
+def perceptron_model(filePath, target_column_name): # file csv
 
-data = df.drop('price_range', axis=1)
-result = df.price_range
+	df = pd.read_csv(filePath)
 
-# print(data)
-# print(result)
-
-data_train, data_test, result_train, result_test = train_test_split( data, result, test_size=0.3, random_state=1, stratify=result )
-
-# print(data_test)
-# print(result_test)
+	data = df.drop( target_column_name, axis=1 )
+	result = df.loc[ : , [target_column_name]]
 
 
-### PreProcess ###############
-
-sc = StandardScaler()
-sc.fit(data_train)
-data_train_std = sc.transform(data_train)
-data_test_std = sc.transform(data_test)
-
-### Model ###################
-
-ppn = Perceptron(eta0=0.1, random_state=1) # eta0 is learning rate
-ppn.fit(data_train_std, result_train)
-
-### Estimate ################
-
-result_predict = ppn.predict(data_test_std)
-# print( (result_test != result_predict).sum())
-
-accuracy_score = accuracy_score(result_test, result_predict)
-print(f'accuracy_score is {accuracy_score}')
+	data_train, data_test, result_train, result_test = train_test_split( data, result, test_size=0.3, random_state=1, stratify=result )
 
 
-### Implement ##############
+	### PreProcess ###############
 
-df = pd.read_csv('data/test.csv') 
+	sc = StandardScaler()
+	sc.fit(data_train)
+	data_train_std = sc.transform(data_train)
+	data_test_std = sc.transform(data_test)
 
-data = df
+	### Model ###################
 
-sc = StandardScaler()
-sc.fit(data)
-data_std = sc.transform(data)
+	ppn = Perceptron(eta0=0.1, random_state=1) # eta0 is learning rate
+	ppn.fit(data_train_std, result_train)
 
-result_predict = ppn.predict(data_test_std)
+	### Estimate ################
 
-print(result_predict)
+	result_predict = ppn.predict(data_test_std)
+	# print( (result_test != result_predict).sum())
+
+	acc = accuracy_score(result_test, result_predict)
+	print(f'accuracy_score is {acc}')
+
+
+	### Implement ##############
+
+	# df = pd.read_csv('data/test.csv') 
+
+	# data = df
+
+	# sc = StandardScaler()
+	# sc.fit(data)
+	# data_std = sc.transform(data)
+
+	# result_predict = ppn.predict(data_test_std)
+
+	# print(result_predict)
+
+if __name__ == '__main__':
+	
+	perceptron_model('data/train.csv', target_column_name='price_range')
 
 
 
