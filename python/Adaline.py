@@ -2,6 +2,20 @@ import numpy as np
 import pandas as pd
 import matplotlib.pyplot as plt
 
+
+def standardization(input_data):
+
+	input_data_std = np.copy(input_data).astype(float)
+
+	for i in range(len(input_data[0])):
+
+
+		input_data_std[:,i] = ( input_data[:,i] - input_data[:,i].mean() ) / input_data[:,i].std()
+
+
+	return input_data_std
+
+
 class AdalineGD:
 
 	def __init__(self, learning_rate=0.001, epoch=100, random_state=1):
@@ -53,12 +67,15 @@ class AdalineGD:
 
 if __name__ == '__main__':
 
-	input_data = np.array([[1, 2], [3, 4], [4, 6], [1, 4]])
+	input_data = np.array([[1, 2, 3], [3, 4, 3], [4, 6, 3], [1, 4, 5]])
 	result_data = np.array([3, 7, 10, 5])
 
-	model = AdalineGD(learning_rate=0.001, epoch=100, random_state=1)
+	model = AdalineGD(learning_rate=0.01, epoch=100, random_state=1)
+
+	input_data = standardization(input_data)
+
 	model.fit(input_data, result_data)
 	model.plot_trainning()
 
-	print(model.predict([2,8]))
+	print(model.predict([2,8, 7]))
 
